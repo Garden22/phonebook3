@@ -2,6 +2,7 @@ package com.javaex.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,17 +17,19 @@ import com.javaex.vo.PersonVo;
 @Controller
 public class PhoneController {
 	
+	@Autowired
+	private PhoneDao phoneDao;
 	
+
 	@RequestMapping(value="/list", method={RequestMethod.GET, RequestMethod.POST})
 	public String list(Model model) {
 		System.out.println("PhoneController>list");
 		
-		PhoneDao phoneDao = new PhoneDao();
 		List<PersonVo> personList = phoneDao.getPersonList();
 		
 		model.addAttribute("personList", personList);
 		
-		return "/WEB-INF/views/list.jsp";
+		return "list";
 	}
 	
 	
@@ -39,7 +42,6 @@ public class PhoneController {
 		
 		PersonVo personVo = new PersonVo(name, hp, company);
 		
-		PhoneDao phoneDao = new PhoneDao();
 		phoneDao.personInsert(personVo);
 		
 		return "redirect:./list";
@@ -61,7 +63,7 @@ public class PhoneController {
 	@RequestMapping(value="/writeForm", method={RequestMethod.GET, RequestMethod.POST})
 	public String writeForm() {
 		System.out.println("PhoneController>writeForm");
-		return "/WEB-INF/views/writeForm.jsp";
+		return "writeForm";
 	}
 	
 	
@@ -69,7 +71,6 @@ public class PhoneController {
 	public String delete(@PathVariable("id") int id) {	
 		System.out.println("PhoneController>delete");
 		
-		PhoneDao phoneDao = new PhoneDao();
 		phoneDao.personDelete(id);
 		return "redirect:/list";
 	}
@@ -78,11 +79,11 @@ public class PhoneController {
 	@RequestMapping(value="/modifyForm/{id}", method={RequestMethod.GET, RequestMethod.POST})
 	public String modifyForm(@PathVariable("id") int id, Model model) {
 		System.out.println("PhoneController>modifyForm");
-		PhoneDao phoneDao = new PhoneDao();
+		
 		PersonVo personVo = phoneDao.getPerson(id);
 		model.addAttribute("personVo", personVo);
 		
-		return "/WEB-INF/views/modifyForm.jsp";
+		return "modifyForm";
 	}
 	
 	
@@ -90,7 +91,6 @@ public class PhoneController {
 	public String modify(@ModelAttribute PersonVo personVo) {
 		System.out.println("PhoneController>modify");
 		
-		PhoneDao phoneDao = new PhoneDao();
 		phoneDao.personUpdate(personVo);
 		return "redirect:/list";
 	}
@@ -99,7 +99,7 @@ public class PhoneController {
 	@RequestMapping(value="/test", method={RequestMethod.GET, RequestMethod.POST})
 	public String test() {
 		System.out.println("PhoneController>test");
-		return "/WEB-INF/views/test.jsp";
+		return "test";
 	}
 	
 }
